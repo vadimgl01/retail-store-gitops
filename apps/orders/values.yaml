@@ -1,21 +1,12 @@
 # ---------------------------------------------------------
-# CORE NETWORK SETTINGS (Moved to top for safety)
-# ---------------------------------------------------------
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-
-# ---------------------------------------------------------
-# BASIC SETTINGS
+# GLOBAL SETTINGS
 # ---------------------------------------------------------
 replicaCount: 1
 image:
   repository: 630019796862.dkr.ecr.eu-central-1.amazonaws.com/retail-vadim-store-orders
   pullPolicy: Always
   tag: "latest"
+
 imagePullSecrets:
   - name: regcred
 
@@ -38,6 +29,11 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 1000
 
+# SERVICE
+service:
+  type: ClusterIP
+  port: 80
+
 resources:
   limits:
     memory: 512Mi
@@ -57,6 +53,10 @@ affinity: {}
 topologySpreadConstraints: []
 metrics:
   enabled: false
+
+configMap:
+  create: true
+  name:
 
 # ---------------------------------------------------------
 # APPLICATION CONFIG
@@ -83,7 +83,7 @@ app:
         password: "password"
 
 # ---------------------------------------------------------
-# INFRASTRUCTURE CONTAINERS
+# INFRASTRUCTURE (Restored missing fields here!)
 # ---------------------------------------------------------
 postgresql:
   create: true
@@ -94,8 +94,13 @@ postgresql:
   service:
     type: ClusterIP
     port: 5432
+  podAnnotations: {}
   persistentVolume:
     enabled: true
+    annotations: {}              # <--- Restored
+    labels: {}                   # <--- Restored
+    accessModes:                 # <--- Restored (Critical!)
+      - ReadWriteOnce
     storageClass: "retail-vadim-gp2"
     size: 8Gi
 
@@ -111,8 +116,13 @@ rabbitmq:
       port: 5672
     http:
       port: 15672
+  podAnnotations: {}
   persistentVolume:
     enabled: true
+    annotations: {}              # <--- Restored
+    labels: {}                   # <--- Restored
+    accessModes:                 # <--- Restored
+      - ReadWriteOnce
     storageClass: "retail-vadim-gp2"
     size: 8Gi
 
@@ -126,9 +136,3 @@ opentelemetry:
 
 podDisruptionBudget:
   enabled: false
-  minAvailable: 2
-  maxUnavailable: 1
-
-configMap:
-  create: true
-  name: ""
