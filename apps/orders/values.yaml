@@ -1,4 +1,7 @@
-# apps/orders/values.yaml - COMPLETE & FINAL
+# apps/orders/values.yaml
+# ---------------------------------------------------------
+# GLOBAL CONFIG
+# ---------------------------------------------------------
 replicaCount: 1
 
 image:
@@ -9,15 +12,9 @@ image:
 imagePullSecrets:
   - name: regcred
 
-nameOverride: ""
-fullnameOverride: ""
-
 serviceAccount:
   create: true
-  annotations: {}
   name: ""
-
-podAnnotations: {}
 
 podSecurityContext:
   fsGroup: 1000
@@ -34,17 +31,6 @@ service:
   type: ClusterIP
   port: 80
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
 resources:
   limits:
     memory: 512Mi
@@ -52,6 +38,9 @@ resources:
     cpu: 128m
     memory: 512Mi
 
+# ---------------------------------------------------------
+# DISABLE EXTRA FEATURES (Prevents crashes)
+# ---------------------------------------------------------
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -70,7 +59,21 @@ opentelemetry:
 securityGroups:
   create: false
 
-# THIS IS THE CRITICAL PART THAT FIXES YOUR ERROR
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# ---------------------------------------------------------
+# CRITICAL FIX 1: THE APP CONFIG
+# This stops the "invalid value" crash
+# ---------------------------------------------------------
 app:
   persistence:
     provider: postgresql
@@ -81,14 +84,18 @@ app:
       host: "orders-postgresql"
       port: "5432"
       username: "orders_user"
-      password: "orders_password"   # Ensure this is here!
+      password: "orders_password"  # <--- MUST BE HERE
       database: "orders_db"
 
+# ---------------------------------------------------------
+# CRITICAL FIX 2: THE DB SERVER CONFIG
+# This creates the actual database
+# ---------------------------------------------------------
 postgresql:
   enabled: true
   auth:
     username: orders_user
-    password: orders_password
+    password: orders_password      # <--- AND HERE
     database: orders_db
   primary:
     persistence:
