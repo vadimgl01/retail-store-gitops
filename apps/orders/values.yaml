@@ -1,4 +1,8 @@
+# apps/orders/values.yaml - COMPLETE VERSION
+
 replicaCount: 1
+
+# 1. YOUR IMAGE
 image:
   repository: 630019796862.dkr.ecr.eu-central-1.amazonaws.com/retail-vadim-store-orders
   pullPolicy: Always
@@ -9,6 +13,7 @@ imagePullSecrets:
 
 nameOverride: ""
 fullnameOverride: ""
+
 serviceAccount:
   create: true
   annotations: {}
@@ -33,49 +38,59 @@ resources:
   limits:
     memory: 512Mi
   requests:
-    cpu: 256m
+    cpu: 128m
     memory: 512Mi
 
+# 2. STANDARD SECTIONS (Prevents crashes)
 autoscaling:
   enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
 
-# 1. APP CONFIGURATION
+podDisruptionBudget:
+  enabled: false
+
+metrics:
+  enabled: false
+
+opentelemetry:
+  enabled: false
+
+# 3. APP CONFIGURATION (Fixes the "Nil Pointer" error)
 app:
   persistence:
-    provider: 'postgres'  # Use Real DB
-  messaging:
-    provider: 'rabbitmq'  # Use Real Messaging
+    provider: postgresql
+    secret:
+      create: true      # <--- THIS LINE FIXES YOUR ERROR
+      name: orders-db-secret
+    postgresql:
+      host: "orders-postgresql"
+      port: "5432"
+      username: "orders_user"
+      password: "orders_password"
+      database: "orders_db"
 
-# 2. POSTGRESQL CONFIGURATION
+# 4. POSTGRES CONFIGURATION
 postgresql:
-  create: true
-  image:
-    repository: public.ecr.aws/docker/library/postgres
-    tag: "13.2"
+  enabled: true
+  auth:
+    username: orders_user
+    password: orders_password
+    database: orders_db
   primary:
     persistence:
       enabled: true
       storageClass: "retail-vadim-gp2"
       size: 8Gi
-  auth:
-    username: orders
-    password: "orders-password"
-    database: orders
 
-# 3. RABBITMQ CONFIGURATION
+# 5. RABBITMQ CONFIGURATION
 rabbitmq:
-  create: true
-  image:
-    repository: public.ecr.aws/bitnami/rabbitmq
-    tag: "3.8"
+  enabled: true
+  auth:
+    username: "user"
+    password: "password"
   persistence:
     enabled: true
     storageClass: "retail-vadim-gp2"
     size: 8Gi
-  auth:
-    username: user
-    password: "password"
-
-securityGroups:
-  create: false
-  securityGroupIds: []
