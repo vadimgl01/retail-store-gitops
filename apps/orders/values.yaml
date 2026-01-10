@@ -94,3 +94,18 @@ rabbitmq:
     enabled: true
     storageClass: "retail-vadim-gp2"
     size: 8Gi
+# Add these lines to the bottom of apps/orders/values.yaml
+
+securityGroups:
+  create: false   # <--- Fixes the current crash
+
+ingress:
+  enabled: false  # <--- Prevents the NEXT crash
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
