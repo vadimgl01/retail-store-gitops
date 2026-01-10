@@ -80,6 +80,7 @@ app:
     secret:
       create: true
       name: orders-db-secret
+      username: "orders_user"
     postgresql:
       host: "orders-postgresql"
       port: "5432"
