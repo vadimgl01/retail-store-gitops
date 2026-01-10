@@ -1,0 +1,115 @@
+# 1. CATALOG (Includes MySQL)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: catalog
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vadimgl01/retail-store-gitops.git 
+    targetRevision: main
+    path: apps/catalog
+    helm:
+      passCredentials: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+# 2. ORDERS (Includes Postgres + RabbitMQ)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: orders
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vadimgl01/retail-store-gitops.git  
+    targetRevision: main
+    path: apps/orders
+    helm:
+      passCredentials: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+# 3. CHECKOUT (Includes Redis)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: checkout
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vadimgl01/retail-store-gitops.git  
+    targetRevision: main
+    path: apps/checkout
+    helm:
+      passCredentials: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+# 4. CART (Includes DynamoDB Local)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cart
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vadimgl01/retail-store-gitops.git  
+    targetRevision: main
+    path: apps/cart
+    helm:
+      passCredentials: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+# 5. UI (Frontend)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ui
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vadimgl01/retail-store-gitops.git  
+    targetRevision: main
+    path: apps/ui
+    helm:
+      passCredentials: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

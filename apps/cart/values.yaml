@@ -1,24 +1,18 @@
-# Default values for carts.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 image:
-  repository: public.ecr.aws/aws-containers/retail-store-sample-cart
+  repository: 630019796862.dkr.ecr.eu-central-1.amazonaws.com/retail-vadim-store-cart
   pullPolicy: Always
-  tag: "1.2.2"
+  tag: "latest"
+
 imagePullSecrets:
   - name: regcred
+
 nameOverride: ""
 fullnameOverride: ""
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
+
 podAnnotations: {}
 podSecurityContext:
   fsGroup: 1000
@@ -29,57 +23,33 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
+
 service:
   type: ClusterIP
   port: 80
+
 resources:
   limits:
     memory: 512Mi
   requests:
     cpu: 256m
     memory: 512Mi
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-nodeSelector: {}
-tolerations: []
-affinity: {}
-topologySpreadConstraints: []
-metrics:
-  enabled: true
-  podAnnotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "8080"
-    prometheus.io/path: "/actuator/prometheus"
-configMap:
-  create: true
-  name:
+
+# 1. APP CONFIGURATION
 app:
   persistence:
-    provider: in-memory
-    dynamodb:
-      tableName: Items
-      createTable: false
+    provider: dynamodb
+    endpoint: "http://retail-store-cart-dynamodb:8000"
+
+# 2. DYNAMODB CONFIGURATION
 dynamodb:
-  create: false
+  create: true
   image:
-    repository: public.ecr.aws/aws-dynamodb-local/aws-dynamodb-local
-    pullPolicy: IfNotPresent
-    tag: "1.25.1"
+    repository: amazon/dynamodb-local
+    tag: "latest"
   service:
-    type: ClusterIP
     port: 8000
-  podAnnotations: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-opentelemetry:
-  enabled: false
-  instrumentation: ""
-podDisruptionBudget:
-  enabled: false
-  minAvailable: 2
-  maxUnavailable: 1
+  persistence:
+    enabled: true
+    storageClass: "retail-vadim-gp2"
+    size: 8Gi
