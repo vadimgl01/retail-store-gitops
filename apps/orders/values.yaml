@@ -1,16 +1,17 @@
-# apps/orders/values.yaml
+cat <<EOF > apps/orders/values.yaml
 # ---------------------------------------------------------
-# GLOBAL CONFIG
+# GLOBAL SETTINGS
 # ---------------------------------------------------------
 replicaCount: 1
-
 image:
   repository: 630019796862.dkr.ecr.eu-central-1.amazonaws.com/retail-vadim-store-orders
   pullPolicy: Always
   tag: "latest"
-
 imagePullSecrets:
   - name: regcred
+
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
   create: true
@@ -18,7 +19,6 @@ serviceAccount:
 
 podSecurityContext:
   fsGroup: 1000
-
 securityContext:
   capabilities:
     drop:
@@ -35,11 +35,73 @@ resources:
   limits:
     memory: 512Mi
   requests:
-    cpu: 128m
+    cpu: 256m
     memory: 512Mi
 
 # ---------------------------------------------------------
-# DISABLE EXTRA FEATURES (Prevents crashes)
+# APPLICATION CONFIGURATION (The "Brain")
+# ---------------------------------------------------------
+app:
+  # 1. DATABASE CONNECTION
+  persistence:
+    provider: 'postgresql'
+    endpoint: 'orders-postgresql'
+    database: 'orders_db'
+    secret:
+      create: true
+      name: orders-db-secret
+      username: "orders_user"
+      password: "orders_password"
+
+  # 2. MESSAGING CONNECTION (This fixes your RabbitMQ crash)
+  messaging:
+    provider: 'rabbitmq'
+    rabbitmq:
+      addresses:
+        - "orders-rabbitmq:5672"
+      secret:
+        create: true
+        name: orders-rabbitmq-secret
+        username: "user"
+        password: "password"
+
+# ---------------------------------------------------------
+# INFRASTRUCTURE CONTAINERS (The "Body")
+# ---------------------------------------------------------
+
+# POSTGRESQL CONTAINER
+postgresql:
+  create: true             # <--- Turns on the DB container
+  image:
+    repository: public.ecr.aws/docker/library/postgres
+    tag: "13"
+  service:
+    type: ClusterIP
+    port: 5432
+  persistentVolume:
+    enabled: true
+    storageClass: "retail-vadim-gp2"  # <--- Your Custom Storage
+    size: 8Gi
+
+# RABBITMQ CONTAINER
+rabbitmq:
+  create: true             # <--- Turns on the Queue container
+  image:
+    repository: public.ecr.aws/docker/library/rabbitmq
+    tag: "3.8-management"
+  service:
+    type: ClusterIP
+    amqp:
+      port: 5672
+    http:
+      port: 15672
+  persistentVolume:
+    enabled: true
+    storageClass: "retail-vadim-gp2"  # <--- Your Custom Storage
+    size: 8Gi
+
+# ---------------------------------------------------------
+# DISABLE EXTRA FEATURES (Prevent Crashes)
 # ---------------------------------------------------------
 autoscaling:
   enabled: false
@@ -61,55 +123,4 @@ securityGroups:
 
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-# ---------------------------------------------------------
-# CRITICAL FIX 1: THE APP CONFIG
-# This stops the "invalid value" crash
-# ---------------------------------------------------------
-app:
-  persistence:
-    provider: postgresql
-    secret:
-      create: true
-      name: orders-db-secret
-      username: "orders_user"
-    postgresql:
-      host: "orders-postgresql"
-      port: "5432"
-      username: "orders_user"
-      password: "orders_password"  # <--- MUST BE HERE
-      database: "orders_db"
-
-# ---------------------------------------------------------
-# CRITICAL FIX 2: THE DB SERVER CONFIG
-# This creates the actual database
-# ---------------------------------------------------------
-postgresql:
-  enabled: true
-  auth:
-    username: orders_user
-    password: orders_password      # <--- AND HERE
-    database: orders_db
-  primary:
-    persistence:
-      enabled: true
-      storageClass: "retail-vadim-gp2"
-      size: 8Gi
-
-rabbitmq:
-  enabled: true
-  auth:
-    username: "user"
-    password: "password"
-  persistence:
-    enabled: true
-    storageClass: "retail-vadim-gp2"
-    size: 8Gi
+EOF
