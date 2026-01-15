@@ -33,6 +33,7 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - retail-store.vadim-devops-teststore.store
+  tls: []
 #  tls:
 #    - secretName: tls-secret
 #      hosts:
