@@ -89,3 +89,12 @@ opentelemetry:
 
 podDisruptionBudget:
   enabled: false
+
+# ---------------------------------------------------------
+# AUTOSCALING (Required to fix the crash)
+# ---------------------------------------------------------
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
