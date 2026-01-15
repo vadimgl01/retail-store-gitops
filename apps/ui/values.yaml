@@ -98,3 +98,9 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
+
+# ---------------------------------------------------------
+# CONFIGMAP (Required to fix the new crash)
+# ---------------------------------------------------------
+configMap:
+  create: true
