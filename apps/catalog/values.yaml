@@ -59,8 +59,8 @@ configMap:
   name:
 app:
   persistence:
-    provider: in-memory
-    endpoint: ""
+    provider: mysql                  # Change from in-memory to mysql
+    endpoint: "catalog-mysql:3306"   # Add the service name and port
     database: "catalog"
     secret:
       create: true
