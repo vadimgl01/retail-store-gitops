@@ -63,8 +63,8 @@ configMap:
   name: ""
 
 app:
-  # Manual environment variable injection to kill the 'bin_catalog' ghost
-  extraEnv:
+  # Direct injection to ensure Catalog app knows where to go
+  env:
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
@@ -78,8 +78,7 @@ app:
     secret:
       create: true
       name: "catalog-db"
-      username: "root"
-      password: "my-secret-pw"
+      # We removed username/password from here to stop the 'MYSQL_USER' error
 
 mysql:
   create: true
@@ -94,7 +93,7 @@ mysql:
   persistentVolume:
     enabled: true
     storageClass: "retail-vadim-gp2"
-    size: 8Gi
+    size: 8Gi # Keeping it 8Gi to match your existing PVC
     accessModes:
       - ReadWriteOnce
 
