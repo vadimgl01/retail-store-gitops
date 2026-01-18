@@ -1,4 +1,4 @@
-# Default values for catalog.
+nano ~/RetailStore/retail-store-gitops/apps/catalog/values.yaml# Default values for catalog.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -61,7 +61,7 @@ app:
   persistence:
     provider: mysql
     endpoint: "catalog-mysql:3306"
-    database: "catalog"
+    dbName: "catalog"
     secret:
       create: true
       name: catalog-db
