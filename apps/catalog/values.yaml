@@ -63,13 +63,13 @@ configMap:
   name: ""
 
 app:
-  # Direct injection to ensure Catalog app knows where to go
+  # Ensuring the app knows to use the new catalog_user
   env:
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
+    - name: RETAIL_CATALOG_PERSISTENCE_USER
+      value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
-      value: "my-secret-pw"
-    - name: RETAIL_CATALOG_DB_PASSWORD
       value: "my-secret-pw"
   persistence:
     provider: mysql
@@ -78,11 +78,16 @@ app:
     secret:
       create: true
       name: "catalog-db"
-      # We removed username/password from here to stop the 'MYSQL_USER' error
+      username: "catalog_user"
+      password: "my-secret-pw"
 
 mysql:
   create: true
   rootPassword: "my-secret-pw"
+  # These lines prevent the "MYSQL_USER=root" crash
+  mysqlUser: "catalog_user"
+  mysqlPassword: "my-secret-pw"
+  mysqlDatabase: "catalog"
   image:
     repository: public.ecr.aws/docker/library/mysql
     pullPolicy: IfNotPresent
@@ -93,7 +98,7 @@ mysql:
   persistentVolume:
     enabled: true
     storageClass: "retail-vadim-gp2"
-    size: 8Gi # Keeping it 8Gi to match your existing PVC
+    size: 8Gi
     accessModes:
       - ReadWriteOnce
 
