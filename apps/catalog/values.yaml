@@ -59,16 +59,19 @@ configMap:
   name:
 app:
   persistence:
-    provider: mysql                  # Change from in-memory to mysql
-    endpoint: "catalog-mysql:3306"   # Add the service name and port
+    provider: mysql
+    endpoint: "catalog-mysql:3306"
     database: "catalog"
     secret:
       create: true
       name: catalog-db
-      username: catalog
-      password: ""
+      username: "root"      # Changed from catalog to root to match your app error
+      password: "my-secret-pw" # Add your password here
+
 mysql:
   create: true
+  # Add these lines under the mysql block to set the DB password
+  rootPassword: "my-secret-pw"
   image:
     repository: public.ecr.aws/docker/library/mysql
     pullPolicy: IfNotPresent
