@@ -1,27 +1,26 @@
-nano ~/RetailStore/retail-store-gitops/apps/catalog/values.yaml# Default values for catalog.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
+
 image:
   repository: 630019796862.dkr.ecr.eu-central-1.amazonaws.com/retail-vadim-store-catalog
   pullPolicy: Always
   tag: "latest"
+
 imagePullSecrets:
   - name: regcred
+
 nameOverride: ""
 fullnameOverride: ""
+
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
+
 podAnnotations: {}
+
 podSecurityContext:
   fsGroup: 1000
+
 securityContext:
   capabilities:
     drop:
@@ -29,34 +28,40 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
+
 service:
   type: ClusterIP
   port: 80
+
 resources:
   limits:
     memory: 256Mi
   requests:
     cpu: 256m
     memory: 256Mi
+
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+
 nodeSelector: {}
 tolerations: []
 affinity: {}
 topologySpreadConstraints: []
+
 metrics:
   enabled: true
   podAnnotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "8080"
     prometheus.io/path: "/metrics"
+
 configMap:
   create: true
-  name:
+  name: ""
+
 app:
   persistence:
     provider: mysql
@@ -64,13 +69,12 @@ app:
     dbName: "catalog"
     secret:
       create: true
-      name: catalog-db
-      username: "root"      # Changed from catalog to root to match your app error
-      password: "my-secret-pw" # Add your password here
+      name: "catalog-db"
+      username: "root"
+      password: "my-secret-pw"
 
 mysql:
   create: true
-  # Add these lines under the mysql block to set the DB password
   rootPassword: "my-secret-pw"
   image:
     repository: public.ecr.aws/docker/library/mysql
@@ -79,26 +83,21 @@ mysql:
   service:
     type: ClusterIP
     port: 3306
-  podAnnotations: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
   persistentVolume:
     enabled: true
     storageClass: "retail-vadim-gp2"
-    size: 8Gi
-    annotations: {}
-    labels: {}
+    size: 10Gi
     accessModes:
       - ReadWriteOnce
-    size: 10Gi
-    storageClass: ""
+
 securityGroups:
   create: false
   securityGroupIds: []
+
 opentelemetry:
   enabled: false
   instrumentation: ""
+
 podDisruptionBudget:
   enabled: false
   minAvailable: 2
