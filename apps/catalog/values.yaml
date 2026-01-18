@@ -63,6 +63,14 @@ configMap:
   name: ""
 
 app:
+  # Manual environment variable injection to kill the 'bin_catalog' ghost
+  extraEnv:
+    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
+      value: "catalog"
+    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
+      value: "my-secret-pw"
+    - name: RETAIL_CATALOG_DB_PASSWORD
+      value: "my-secret-pw"
   persistence:
     provider: mysql
     endpoint: "catalog-mysql:3306"
