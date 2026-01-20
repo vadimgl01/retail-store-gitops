@@ -62,29 +62,16 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL: One of these WILL fill that empty line in ArgoCD
+# Satisfy the templates so ArgoCD stops complaining
 persistence:
   provider: "mysql"
   endpoint: "catalog-mysql:3306"
-  # We are setting every possible variant used by this chart:
   dbName: "catalog"
   databaseName: "catalog"
-  database: "catalog"
-  db_name: "catalog"
 
-# 2. APP LEVEL: Keep this to prevent the "nil pointer" crash in secrets
 app:
-  persistence:
-    provider: "mysql"
-    endpoint: "catalog-mysql:3306"
-    dbName: "catalog"
-    secret:
-      create: true
-      name: "catalog-db"
-      username: "catalog_user"
-      password: "my-secret-pw"
-  
-  # 3. ENV BLOCK: Direct injection into the Pod (The "Truth")
+  # DIRECT INJECTION: This is what the Go code actually reads.
+  # This bypasses the ConfigMap completely.
   env:
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
@@ -94,6 +81,10 @@ app:
       value: "mysql"
     - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
       value: "catalog-mysql:3306"
+    - name: RETAIL_CATALOG_PERSISTENCE_USER
+      value: "catalog_user"
+    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
+      value: "my-secret-pw"
 persistence:
   provider: mysql
   endpoint: "catalog-mysql:3306"
