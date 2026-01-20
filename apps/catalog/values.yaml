@@ -62,12 +62,19 @@ configMap:
   create: true
   name: ""
 
-# 1. This block satisfies the ConfigMap template
+# 1. ROOT LEVEL: This satisfies the ConfigMap and Secret templates
 persistence:
   provider: "mysql"
+  dbName: "catalog"
 
-# 2. This block satisfies the Secret and Pod environment templates
+# 2. APP LEVEL: This satisfies the Deployment/Pod environment
 app:
+  persistence:
+    secret:
+      create: true
+      name: "catalog-db"
+      username: "catalog_user"
+      password: "my-secret-pw"
   env:
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
@@ -77,21 +84,8 @@ app:
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
-  
-  persistence:
-    secret:
-      create: true
-      name: "catalog-db"
-      username: "catalog_user"
-      password: "my-secret-pw"
-  # Keep this here so the Secret template doesn't crash
-  persistence:
-    secret:
-      create: true
-      name: "catalog-db"
-      username: "catalog_user"
-      password: "my-secret-pw"
-
+    - name: RETAIL_CATALOG_BASE_PATH
+      value: "/"
 #KEEP THIS HERE to satisfy the configmap.yaml template
 persistence:
   provider: mysql
