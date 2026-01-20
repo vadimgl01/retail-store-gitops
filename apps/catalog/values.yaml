@@ -62,15 +62,17 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL: One of these WILL fill that empty DB_NAME line in the ConfigMap
+# 1. ROOT LEVEL: One of these WILL fill that empty line in ArgoCD
 persistence:
   provider: "mysql"
   endpoint: "catalog-mysql:3306"
+  # We are setting every possible variant used by this chart:
   dbName: "catalog"
-  databaseName: "catalog"  # <--- Added variation
-  database: "catalog"      # <--- Added variation
-  name: "catalog"          # <--- Added variation
-# 2. APP LEVEL: This prevents the 'nil pointer' evaluations and secret crashes
+  databaseName: "catalog"
+  database: "catalog"
+  db_name: "catalog"
+
+# 2. APP LEVEL: Keep this to prevent the "nil pointer" crash in secrets
 app:
   persistence:
     provider: "mysql"
@@ -82,27 +84,16 @@ app:
       username: "catalog_user"
       password: "my-secret-pw"
   
-  # 3. CONTAINER ENV: This is what the actual Go code reads to stop the 500
+  # 3. ENV BLOCK: Direct injection into the Pod (The "Truth")
   env:
+    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
+      value: "catalog"
+    - name: DB_NAME
+      value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
     - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
       value: "catalog-mysql:3306"
-    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
-      value: "catalog"
-    - name: RETAIL_CATALOG_PERSISTENCE_USER
-      value: "catalog_user"
-    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
-      value: "my-secret-pw"
-    # Fallback variables for different app versions
-    - name: DB_ENDPOINT
-      value: "catalog-mysql:3306"
-    - name: DB_PASSWORD
-      value: "my-secret-pw"
-    - name: DB_USER
-      value: "catalog_user"
-    - name: DB_NAME
-      value: "catalog"
 persistence:
   provider: mysql
   endpoint: "catalog-mysql:3306"
