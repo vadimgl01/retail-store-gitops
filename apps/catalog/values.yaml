@@ -62,27 +62,28 @@ configMap:
   create: true
   name: ""
 
+# 1. This block satisfies the ConfigMap template
+persistence:
+  provider: "mysql"
+
+# 2. This block satisfies the Secret and Pod environment templates
 app:
   env:
-    # This fixed the "127.0.0.1" error
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
-    - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
-      value: "catalog-mysql:3306"
-    
-    # This fixed the "using password: NO" error
     - name: DB_PASSWORD
       value: "my-secret-pw"
-    - name: MYSQL_PASSWORD
-      value: "my-secret-pw"
-    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
-      value: "my-secret-pw"
-
-    # This fixed the user and db name
     - name: DB_USER
       value: "catalog_user"
-    - name: DB_NAME
-      value: "catalog"
+    - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
+      value: "mysql"
+  
+  persistence:
+    secret:
+      create: true
+      name: "catalog-db"
+      username: "catalog_user"
+      password: "my-secret-pw"
   # Keep this here so the Secret template doesn't crash
   persistence:
     secret:
