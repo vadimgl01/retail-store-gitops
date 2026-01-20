@@ -42,16 +42,20 @@ ingress:
 # ---------------------------------------------------------
 # APP CONNECTIONS (Connecting to other microservices)
 # ---------------------------------------------------------
+  # ---------------------------------------------------------
+# APP CONNECTIONS (Connecting to other microservices)
+# ---------------------------------------------------------
 app:
+  env:
+    - name: RETAIL_UI_ENDPOINTS_CATALOG
+      value: "http://catalog/catalog"
   endpoints:
-    # Assuming your services are named simply 'catalog', 'carts', etc.
-    # If connections fail, we might need to change these to 'retail-store-catalog' etc.
-    catalog: http://catalog:80
-    carts: http://cart-carts:80
-    checkout: http://checkout:80
-    orders: http://orders:80
-  
-  # Chat features (Disabled for now)
+    catalog: "http://catalog/catalog"
+    carts: "http://cart-carts:80"
+    checkout: "http://checkout:80"
+    orders: "http://orders:80"
+
+# Chat features (Disabled for now)
   chat:
     enabled: false
 
