@@ -62,13 +62,13 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL: This fills the ConfigMap (Provider, Endpoint, DB Name)
+# 1. ROOT LEVEL: This fills the ConfigMap ArgoCD is showing
 persistence:
   provider: "mysql"
   endpoint: "catalog-mysql:3306"
-  dbName: "catalog"
+  dbName: "catalog"      # This fixes the empty DB_NAME
 
-# 2. APP LEVEL: This prevents the "nil pointer" crash in secret.yaml
+# 2. APP LEVEL: This prevents the "nil pointer" crash in your secrets
 app:
   persistence:
     secret:
@@ -77,7 +77,7 @@ app:
       username: "catalog_user"
       password: "my-secret-pw"
   
-  # 3. ENVIRONMENT: The "Truth" for the running container
+  # 3. ENV BLOCK: This is the "Truth" the container uses to run
   env:
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
@@ -89,6 +89,8 @@ app:
       value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
+    - name: RETAIL_CATALOG_BASE_PATH
+      value: "/"
 persistence:
   provider: mysql
   endpoint: "catalog-mysql:3306"
