@@ -62,14 +62,22 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL: This fills the ConfigMap ArgoCD is showing
+# 1. ROOT LEVEL: This fills the ConfigMap (Provider, Endpoint, DB Name)
 persistence:
   provider: "mysql"
   endpoint: "catalog-mysql:3306"
-  dbName: "catalog"      # <--- ADD THIS LINE HERE
+  dbName: "catalog"
 
-# 2. APP LEVEL: This ensures the Pod stays healthy
+# 2. APP LEVEL: This prevents the "nil pointer" crash in secret.yaml
 app:
+  persistence:
+    secret:
+      create: true
+      name: "catalog-db"
+      username: "catalog_user"
+      password: "my-secret-pw"
+  
+  # 3. ENVIRONMENT: The "Truth" for the running container
   env:
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
