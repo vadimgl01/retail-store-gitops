@@ -64,29 +64,23 @@ configMap:
 
 app:
   env:
-    - name: RETAIL_CATALOG_BASE_PATH
-      value: "/"
-    - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
-      value: "catalog-mysql:3306"
+    # This fixed the "127.0.0.1" error
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
+    - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
+      value: "catalog-mysql:3306"
     
-    # User Variations
-    - name: RETAIL_CATALOG_PERSISTENCE_USER
-      value: "catalog_user"
-    - name: DB_USER
-      value: "catalog_user"
-    
-    # Password Variations (This fixes the "using password: NO" error)
-    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
-      value: "my-secret-pw"
+    # This fixed the "using password: NO" error
     - name: DB_PASSWORD
       value: "my-secret-pw"
     - name: MYSQL_PASSWORD
       value: "my-secret-pw"
+    - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
+      value: "my-secret-pw"
 
-    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
-      value: "catalog"
+    # This fixed the user and db name
+    - name: DB_USER
+      value: "catalog_user"
     - name: DB_NAME
       value: "catalog"
   # Keep this here so the Secret template doesn't crash
