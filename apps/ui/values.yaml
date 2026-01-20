@@ -46,7 +46,7 @@ app:
   endpoints:
     # Assuming your services are named simply 'catalog', 'carts', etc.
     # If connections fail, we might need to change these to 'retail-store-catalog' etc.
-    catalog: http://catalog:80/catalog/catalog
+    catalog: http://catalog:80
     carts: http://cart-carts:80
     checkout: http://checkout:80
     orders: http://orders:80

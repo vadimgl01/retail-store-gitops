@@ -63,14 +63,18 @@ configMap:
   name: ""
 app:
   env:
+    - name: RETAIL_CATALOG_BASE_PATH
+      value: "/" 
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
-    - name: RETAIL_CATALOG_DB_NAME # Added this
+    - name: RETAIL_CATALOG_DB_NAME
       value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_USER
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
+  persistence:
+    # ... rest of your persistence block stays the same
   persistence:
     provider: mysql
     endpoint: "catalog-mysql:3306"
