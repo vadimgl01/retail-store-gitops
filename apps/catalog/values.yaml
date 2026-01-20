@@ -66,14 +66,18 @@ app:
   env:
     - name: RETAIL_CATALOG_BASE_PATH
       value: "/"
-    # These three override the empty ConfigMap values:
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
+    
+    # These are the two most common variables for the "retail-store" catalog endpoint:
     - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
       value: "catalog-mysql:3306"
+    - name: CATALOG_DB_ENDPOINT
+      value: "catalog-mysql:3306"
+
+    # Ensure these are also set
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
-    # Credentials:
     - name: RETAIL_CATALOG_PERSISTENCE_USER
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
