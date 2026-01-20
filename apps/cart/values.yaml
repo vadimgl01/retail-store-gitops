@@ -7,7 +7,7 @@ image:
   repository: public.ecr.aws/aws-containers/retail-store-sample-cart
   pullPolicy: Always
   #tag: "latest"
-  tag: "2.1.2"
+  tag: "0.4.0"
 imagePullSecrets:
   - name: regcred
 nameOverride: ""
@@ -32,7 +32,8 @@ securityContext:
   runAsUser: 1000
 service:
   type: ClusterIP
-  port: 80
+  port: 80           # This is the "Door" the UI knocks on
+  targetPort: 8080   # This is the "Room" where the app is actually listening
 resources:
   limits:
     memory: 512Mi
