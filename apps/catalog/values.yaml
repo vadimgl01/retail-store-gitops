@@ -61,6 +61,7 @@ metrics:
 configMap:
   create: true
   name: ""
+
 app:
   env:
     - name: RETAIL_CATALOG_BASE_PATH
@@ -73,17 +74,21 @@ app:
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
+  
+  # KEEP THIS HERE to satisfy the secret.yaml template
+  persistence:
+    secret:
+      create: true
+      name: "catalog-db"
+      username: "catalog_user"
+      password: "my-secret-pw"
 
-# Move this block to the TOP LEVEL (left-aligned)
+#KEEP THIS HERE to satisfy the configmap.yaml template
 persistence:
   provider: mysql
   endpoint: "catalog-mysql:3306"
   dbName: "catalog"
-  secret:
-    create: true
-    name: "catalog-db"
-    username: "catalog_user"
-    password: "my-secret-pw"
+
 mysql:
   create: true
   rootPassword: "my-secret-pw"
