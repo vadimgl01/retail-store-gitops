@@ -73,8 +73,7 @@ app:
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
-  persistence:
-    # ... rest of your persistence block stays the same
+
   persistence:
     provider: mysql
     endpoint: "catalog-mysql:3306"
