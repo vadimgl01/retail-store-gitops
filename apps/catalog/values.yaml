@@ -64,7 +64,7 @@ configMap:
 app:
   env:
     - name: RETAIL_CATALOG_BASE_PATH
-      value: "/" 
+      value: "/"
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
     - name: RETAIL_CATALOG_DB_NAME
@@ -74,16 +74,16 @@ app:
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
 
-  persistence:
-    provider: mysql
-    endpoint: "catalog-mysql:3306"
-    dbName: "catalog"
-    secret:
-      create: true
-      name: "catalog-db"
-      username: "catalog_user"
-      password: "my-secret-pw"
-
+# Move this block to the TOP LEVEL (left-aligned)
+persistence:
+  provider: mysql
+  endpoint: "catalog-mysql:3306"
+  dbName: "catalog"
+  secret:
+    create: true
+    name: "catalog-db"
+    username: "catalog_user"
+    password: "my-secret-pw"
 mysql:
   create: true
   rootPassword: "my-secret-pw"
