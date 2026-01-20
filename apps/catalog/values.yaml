@@ -62,12 +62,14 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL: Many templates look here first
+# 1. ROOT LEVEL: One of these WILL fill that empty DB_NAME line in the ConfigMap
 persistence:
   provider: "mysql"
   endpoint: "catalog-mysql:3306"
   dbName: "catalog"
-
+  databaseName: "catalog"  # <--- Added variation
+  database: "catalog"      # <--- Added variation
+  name: "catalog"          # <--- Added variation
 # 2. APP LEVEL: This prevents the 'nil pointer' evaluations and secret crashes
 app:
   persistence:
