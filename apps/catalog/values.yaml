@@ -66,16 +66,20 @@ app:
   env:
     - name: RETAIL_CATALOG_BASE_PATH
       value: "/"
+    # These three override the empty ConfigMap values:
+    - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
+      value: "mysql"
+    - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
+      value: "catalog-mysql:3306"
     - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
       value: "catalog"
-    - name: RETAIL_CATALOG_DB_NAME
-      value: "catalog"
+    # Credentials:
     - name: RETAIL_CATALOG_PERSISTENCE_USER
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
-  
-  # KEEP THIS HERE to satisfy the secret.yaml template
+
+  # Keep this here so the Secret template doesn't crash
   persistence:
     secret:
       create: true
