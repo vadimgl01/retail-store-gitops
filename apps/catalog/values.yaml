@@ -68,21 +68,29 @@ app:
       value: "/"
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
-    
-    # These are the two most common variables for the "retail-store" catalog endpoint:
     - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
       value: "catalog-mysql:3306"
-    - name: CATALOG_DB_ENDPOINT
+    - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
-
-    # Ensure these are also set
-    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
-      value: "catalog"
+    
+    # User Variations
     - name: RETAIL_CATALOG_PERSISTENCE_USER
       value: "catalog_user"
+    - name: DB_USER
+      value: "catalog_user"
+    
+    # Password Variations (This fixes the "using password: NO" error)
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
+    - name: DB_PASSWORD
+      value: "my-secret-pw"
+    - name: MYSQL_PASSWORD
+      value: "my-secret-pw"
 
+    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
+      value: "catalog"
+    - name: DB_NAME
+      value: "catalog"
   # Keep this here so the Secret template doesn't crash
   persistence:
     secret:
