@@ -50,10 +50,10 @@ app:
     - name: RETAIL_UI_ENDPOINTS_CATALOG
       value: "http://catalog/catalog"
     - name: RETAIL_UI_ENDPOINTS_CARTS
-      value: "http://cart-carts" 
+      value: "http://cart-carts:8080" 
   endpoints:
     catalog: "http://catalog/catalog"
-    carts: "http://cart-carts"
+    carts: "http://cart-carts:8080"
     checkout: "http://checkout:80"
     orders: "http://orders:80"
 
