@@ -48,15 +48,14 @@ ingress:
 app:
   env:
     - name: RETAIL_UI_ENDPOINTS_CATALOG
-      value: "http://catalog/catalog"
+      value: "http://catalog"
     - name: RETAIL_UI_ENDPOINTS_CARTS
-      value: "http://cart-carts:8080" 
+      value: "http://cart-carts"
   endpoints:
-    catalog: "http://catalog/catalog"
-    carts: "http://cart-carts:8080"
-    checkout: "http://checkout:80"
-    orders: "http://orders:80"
-
+    catalog: "http://catalog"
+    carts: "http://cart-carts"
+    checkout: "http://checkout" # Port 80 is default, so no :80 needed
+    orders: "http://orders"     # Port 80 is default, so no :80 needed
 # Chat features (Disabled for now)
   chat:
     enabled: false
