@@ -61,16 +61,13 @@ metrics:
 configMap:
   create: true
   name: ""
-
-# 1. ROOT LEVEL: This fills the ConfigMap (Killing the 500 error)
+# 1. ROOT LEVEL (Keep this - Helm templates look here)
 persistence:
-  provider: "mysql"
+  provider: mysql
   endpoint: "catalog-mysql:3306"
-  dbName: "catalog"      # Standard
-  databaseName: "catalog" # Variation 1
-  database: "catalog"      # Variation 2
+  dbName: "catalog"
 
-# 2. APP LEVEL: This prevents the "nil pointer" crash in secret.yaml
+# 2. APP LEVEL (Keep this - Secrets and Deployment env look here)
 app:
   persistence:
     secret:
@@ -78,28 +75,19 @@ app:
       name: "catalog-db"
       username: "catalog_user"
       password: "my-secret-pw"
-
-  # 3. DIRECT ENV: This is the "Truth" that the Go app reads
+  
+  # 3. DIRECT ENV (The "Force Feed" to the Go binary)
   env:
-    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
-      value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_PROVIDER
       value: "mysql"
     - name: RETAIL_CATALOG_PERSISTENCE_ENDPOINT
       value: "catalog-mysql:3306"
+    - name: RETAIL_CATALOG_PERSISTENCE_DB_NAME
+      value: "catalog"
     - name: RETAIL_CATALOG_PERSISTENCE_USER
       value: "catalog_user"
     - name: RETAIL_CATALOG_PERSISTENCE_PASSWORD
       value: "my-secret-pw"
-    - name: DB_NAME
-      value: "catalog"
-    - name: DB_ENDPOINT
-      value: "catalog-mysql:3306"
-persistence:
-  provider: mysql
-  endpoint: "catalog-mysql:3306"
-  dbName: "catalog"
-
 mysql:
   create: true
   rootPassword: "my-secret-pw"
