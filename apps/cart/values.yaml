@@ -11,7 +11,7 @@ image:
 imagePullSecrets:
   - name: regcred
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: ":cart"
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
