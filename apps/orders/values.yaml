@@ -63,9 +63,9 @@ configMap:
 # ---------------------------------------------------------
 app:
   persistence:
-    provider: 'postgresql'
-    endpoint: 'orders-postgresql'
-    database: 'orders_db'
+    provider: 'postgres'               # Changed from 'postgresql'
+    endpoint: 'orders-postgresql:5432' # Added port for stability
+    database: 'orders'                 # Changed from 'orders_db' to match sample app
     secret:
       create: true
       name: orders-db-secret
@@ -74,14 +74,13 @@ app:
   messaging:
     provider: 'rabbitmq'
     rabbitmq:
-      addresses:
+      addresses: 
         - "orders-rabbitmq:5672"
       secret:
         create: true
         name: orders-rabbitmq-secret
         username: "user"
         password: "password"
-
 # ---------------------------------------------------------
 # INFRASTRUCTURE (Restored missing fields here!)
 # ---------------------------------------------------------
