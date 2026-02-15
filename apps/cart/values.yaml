@@ -61,10 +61,10 @@ configMap:
   name:
 app:
   persistence:
-    provider: in-memory
-    dynamodb:
-      tableName: Items
-      createTable: false
+    provider: redis           # Change from in-memory to redis
+  redis:                      # Add this block
+    host: "cart-redis"        # This MUST match the service name we found
+    port: 6379
 dynamodb:
   create: false
   image:
