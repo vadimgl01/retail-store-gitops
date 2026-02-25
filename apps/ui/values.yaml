@@ -45,12 +45,12 @@ ingress:
 app:
   env:
     - name: RETAIL_UI_ENDPOINTS_CATALOG
-      value: "http://catalog"
+      value: "http://catalog/catalogue"
     - name: RETAIL_UI_ENDPOINTS_CARTS
-      value: "http://cart/carts"   # Added /carts here
+      value: "http://cart/carts"
   endpoints:
-    catalog: "http://catalog"
-    carts: "http://cart/carts"     # Added /carts here
+    catalog: "http://catalog/catalogue"
+    carts: "http://cart/carts"
     checkout: "http://checkout"
     orders: "http://orders"
 # ---------------------------------------------------------
