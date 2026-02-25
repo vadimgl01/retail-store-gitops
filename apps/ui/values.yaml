@@ -53,6 +53,8 @@ app:
     carts: "http://cart/carts"
     checkout: "http://checkout"
     orders: "http://orders"
+  chat:            # <--- Make sure this section exists!
+    enabled: false # <--- This is the "nil pointer" ArgoCD is complaining about
 # ---------------------------------------------------------
 # RESOURCES & METRICS
 # ---------------------------------------------------------
