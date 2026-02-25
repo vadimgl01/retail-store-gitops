@@ -47,10 +47,10 @@ app:
     - name: RETAIL_UI_ENDPOINTS_CATALOG
       value: "http://catalog/catalogue"
     - name: RETAIL_UI_ENDPOINTS_CARTS
-      value: "http://cart/carts"
+      value: "http://cart/carts/carts"
   endpoints:
     catalog: "http://catalog/catalogue"
-    carts: "http://cart/carts"
+    carts: "http://cart/carts/carts"
     checkout: "http://checkout"
     orders: "http://orders"
   chat:            # <--- Make sure this section exists!
