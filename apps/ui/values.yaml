@@ -42,18 +42,15 @@ ingress:
 # ---------------------------------------------------------
 # APP CONNECTIONS (Connecting to other microservices)
 # ---------------------------------------------------------
-  # ---------------------------------------------------------
-# APP CONNECTIONS (Connecting to other microservices)
-# ---------------------------------------------------------
 app:
   env:
     - name: RETAIL_UI_ENDPOINTS_CATALOG
       value: "http://catalog"
     - name: RETAIL_UI_ENDPOINTS_CARTS
-      value: "http://cart"   # Changed from cart-carts to cart
+      value: "http://cart/carts"   # Added /carts here
   endpoints:
     catalog: "http://catalog"
-    carts: "http://cart"     # Changed from cart-carts to cart
+    carts: "http://cart/carts"     # Added /carts here
     checkout: "http://checkout"
     orders: "http://orders"
 # ---------------------------------------------------------
