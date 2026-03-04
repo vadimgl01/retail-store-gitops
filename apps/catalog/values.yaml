@@ -9,7 +9,7 @@ imagePullSecrets:
   - name: regcred
 
 # --- FIX: ROOT LEVEL INJECTION ---
-# The template looks here for variables to put into the Pod
+# The Helm template uses 'extraEnv' to populate the container's environment.
 extraEnv:
   - name: CATALOG_DATABASE_TYPE
     value: "mysql"
@@ -98,7 +98,7 @@ app:
 mysql:
   create: true
   mysqlDatabase: "catalog"
-  # Added 'auth' block as newer Bitnami-based charts require this for DB creation
+  # Added 'auth' block to fix the "Empty DB" issue found in your describe output
   auth:
     database: "catalog"
     rootPassword: "my-secret-pw"
