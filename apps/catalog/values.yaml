@@ -78,25 +78,27 @@ app:
       username: "catalog_user"
       password: "my-secret-pw"
   
-  # 3. DIRECT ENV - Updated to match Go envconfig expectations
+# 3. DIRECT ENV
   env:
-    # Primary Guess based on envconfig standard mapping
     - name: DB_TYPE
       value: "mysql"
     - name: DB_ENDPOINT
       value: "catalog-mysql:3306"
+    
+    # One of these 4 will be the "Key" that unlocks the database selection:
     - name: DB_NAME
       value: "catalog"
+    - name: CATALOG_DATABASE_NAME
+      value: "catalog"
+    - name: CATALOG_DATABASE_DBNAME
+      value: "catalog"
+    - name: DATABASE_NAME
+      value: "catalog"
+
     - name: DB_USER
       value: "catalog_user"
     - name: DB_PASSWORD
       value: "my-secret-pw"
-    # Secondary Guess (App-specific prefix)
-    - name: CATALOG_DATABASE_TYPE
-      value: "mysql"
-    - name: CATALOG_DATABASE_ENDPOINT
-      value: "catalog-mysql:3306"
-
 mysql:
   create: true
   rootPassword: "my-secret-pw"
