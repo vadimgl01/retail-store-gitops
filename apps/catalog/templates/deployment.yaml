@@ -47,21 +47,12 @@ spec:
             - secretRef:
                 name: {{ .Values.app.persistence.secret.name }}
             {{- end }}
-          # --- FIXED SECTION: HARDCODED DB CONFIG ---
+          # --- DYNAMIC ENV INJECTION ---
+          {{- if .Values.env }}
           env:
-            - name: CATALOG_DATABASE_TYPE
-              value: "mysql"
-            - name: CATALOG_DATABASE_ENDPOINT
-              value: "catalog-mysql:3306"
-            - name: CATALOG_DATABASE_NAME
-              value: "catalog"
-            - name: CATALOG_DATABASE_USER
-              value: "catalog_user"
-            - name: CATALOG_DATABASE_PASSWORD
-              value: "my-secret-pw"
-            - name: DB_NAME
-              value: "catalog"
-          # ------------------------------------------
+            {{- toYaml .Values.env | nindent 12 }}
+          {{- end }}
+          # -----------------------------
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.Version }}"
