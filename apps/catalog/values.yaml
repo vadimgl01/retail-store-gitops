@@ -8,9 +8,8 @@ image:
 imagePullSecrets:
   - name: regcred
 
-# --- FIX: ROOT LEVEL INJECTION ---
-# The Helm template uses 'extraEnv' to populate the container's environment.
-extraEnv:
+# --- FIXED: Key renamed from 'extraEnv' to 'env' to match template ---
+env:
   - name: CATALOG_DATABASE_TYPE
     value: "mysql"
   - name: CATALOG_DATABASE_ENDPOINT
@@ -22,6 +21,8 @@ extraEnv:
   - name: CATALOG_DATABASE_PASSWORD
     value: "my-secret-pw"
   - name: DB_NAME
+    value: "catalog"
+  - name: DB_DATABASE
     value: "catalog"
 
 nameOverride: ""
@@ -78,13 +79,11 @@ configMap:
   create: true
   name: ""
 
-# 1. ROOT LEVEL
 persistence:
   provider: mysql
   endpoint: "catalog-mysql:3306"
   dbName: "catalog"
 
-# 2. APP LEVEL
 app:
   persistence:
     provider: "mysql"
@@ -94,18 +93,15 @@ app:
       username: "catalog_user"
       password: "my-secret-pw"
 
-# 3. MYSQL CONFIGURATION
+# --- MYSQL CONFIGURATION ---
 mysql:
   create: true
   mysqlDatabase: "catalog"
-  # Added 'auth' block to fix the "Empty DB" issue found in your describe output
   auth:
     database: "catalog"
     rootPassword: "my-secret-pw"
     username: "catalog_user"
     password: "my-secret-pw"
-  mysqlUser: "catalog_user"
-  mysqlPassword: "my-secret-pw"
   image:
     repository: public.ecr.aws/docker/library/mysql
     pullPolicy: IfNotPresent
